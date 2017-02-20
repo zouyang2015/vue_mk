@@ -23,9 +23,8 @@ module.exports = {
     'generator-star-spacing': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    //代码有分号，如果无就报错。
-    // 'semi':['error','always'],
-    //缩进用webstorm自带的
-    'indent':0,
+    'semi': ['error', 'always'],
+    'indent': 0,
+    'space-before-function-paren': 0
   }
 }
