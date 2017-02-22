@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
 
     <div class="tab border-1px">
       <div class="tab-item">
@@ -32,7 +32,7 @@
     created() {
       this.$http.get('/api/seller').then(response => {
         response = response.body;
-        if (response.error === ERR_OK) {
+        if (response.errno === ERR_OK) {
           this.seller = response.data;
           console.log(this.seller);
         }
