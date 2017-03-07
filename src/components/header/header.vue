@@ -29,30 +29,40 @@
     <div class="background">
       <img :src="seller.avatar" width="100%" height="100%">
     </div>
-    <div v-show="detailShow" class="detail">
-      <div class="detail-wrapper clearfix">
-        <div class="detail-main">
-          <div class="name">{{seller.name}}</div>
-          <div class="star-warpper">
-            <star :size="48" :score="seller.score"></star>
+    <transition name="fade">
+      <div v-show="detailShow" class="detail">
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <div class="name">{{seller.name}}</div>
+            <div class="star-warpper">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul v-if="seller.supports" class="supports">
+              <li class="support-item" v-for="(item,index) in seller.supports">
+                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                <span class=text>{{seller.supports[index].description}}</span>
+              </li>
+            </ul>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="content">{{seller.bulletin}}</p>
+            </div>
           </div>
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">优惠信息</div>
-            <div class="line"></div>
-          </div>
-          <ul v-if="seller.supports" class="supports">
-            <li class="support-item" v-for="(item,index) in seller.supports">
-              <span class="icon" :class="classMap[seller.supports[index].type]"></span>
-              <span class=text>{{seller.supports[index].description}}</span>
-            </li>
-          </ul>
+        </div>
+        <div class="detail-close" @click="hideDetail">
+          <i class="icon-close"></i>
         </div>
       </div>
-      <div class="detail-close">
-        <i class="icon-close"></i>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -73,6 +83,9 @@
     methods: {
       showDetail() {
         this.detailShow = true;
+      },
+      hideDetail() {
+        this.detailShow = false;
       }
     },
     created() {
@@ -204,11 +217,16 @@
       position: fixed
       top: 0
       left: 0
-      z-index: auto
+      z-index: 100
       width: 100%
       height: 100%
       overflow: auto
+      backdrop-filter: blur(10px)
       background-color: rgba(7, 17, 27, 0.8)
+      &.fade-enter-active, &.fade-leave-active
+        transition: all .5s
+      &.fade-enter, &.fade-leave-active
+        opacity: 0
       .detail-wrapper
         width: 100%
         min-height: 100%
@@ -231,13 +249,49 @@
               flex: 1
               position: relative
               top: -6px
-              border-bottom: 1px solid rgba(255,255,255,0.2)
+              border-bottom: 1px solid rgba(255, 255, 255, 0.2)
             .text
               padding: 0 12px 0 12px
               font-size: 14px
               font-weight: 700
-            .supports
-              .support-item
+          .supports
+            width: 80%
+            margin: 0 auto
+            .support-item
+              padding: 0 12px
+              margin-bottom: 12px
+              font-size: 0
+              &:last-child
+                margin-bottom: 0
+              .icon
+                display: inline-block
+                width: 16px
+                height: 16px
+                vertical-align: top
+                margin-right: 16px
+                background-size: 16px 16px
+                background-repeat: no-repeat
+                &.decrease
+                  bg-img('decrease_2')
+                &.discount
+                  bg-img('discount_2')
+                &.special
+                  bg-img('special_2')
+                &.invoice
+                  bg-img('invoice_2')
+                &.guarantee
+                  bg-img('guarantee_2')
+              .text
+                display: inline-block
+                line-height: 16px
+                font-size: 12px
+          .bulletin
+            width: 80%
+            margin: 0 auto
+            .content
+              padding: 0 12px
+              line-height: 24px
+              font-size: 12px
       .detail-close
         position: relative
         width: 32px
