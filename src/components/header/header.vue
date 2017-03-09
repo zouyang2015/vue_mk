@@ -161,7 +161,6 @@
             display: inline-block;
             line-height: 12px
             font-size: 10px
-
       .support-count
         position: absolute
         padding: 0 8px
