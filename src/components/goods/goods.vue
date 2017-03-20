@@ -36,11 +36,13 @@
         </li>
       </ul>
     </div>
+    <shopcart></shopcart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
+  import shopcart from '../shopcart/shopcart.vue';
 
   const ERR_OK = 0;
 
@@ -112,6 +114,9 @@
           this.listHeight.push(height);
         }
       }
+    },
+    components: {
+      shopcart
     }
   };
 </script>
