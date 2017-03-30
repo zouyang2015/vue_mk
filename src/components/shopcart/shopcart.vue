@@ -1,40 +1,45 @@
 <template>
-  <div class="shopcart">
-    <div class="content" @click="toggleList()">
-      <div class="shopcart-left">
-        <div class="logo-wrapper">
-          <div class="logo" :class="{'highlight':totalCount>0}">
-            <i class="icon-shopping_cart"></i>
+  <div>
+    <div class="shopcart">
+      <div class="content" @click="toggleList()">
+        <div class="shopcart-left">
+          <div class="logo-wrapper">
+            <div class="logo" :class="{'highlight':totalCount>0}">
+              <i class="icon-shopping_cart"></i>
+            </div>
+            <div class="num" v-show="totalCount>0">{{totalCount}}</div>
           </div>
-          <div class="num" v-show="totalCount>0">{{totalCount}}</div>
+          <div class="price" :class="{'highlight':totalPrice>0}">¥{{totalPrice}}</div>
+          <div class="desc">需配送费¥{{deliveryPrice}}元</div>
         </div>
-        <div class="price" :class="{'highlight':totalPrice>0}">¥{{totalPrice}}</div>
-        <div class="desc">需配送费¥{{deliveryPrice}}元</div>
+        <div class="shopcart-right" @click.stop="pay()">
+          <div class="pay" :class="payClass">{{payDesc}}</div>
+        </div>
       </div>
-      <div class="shopcart-right">
-        <div class="pay" :class="payClass">{{payDesc}}</div>
-      </div>
+      <transition name="fold">
+        <div class="shopcart-list" v-show="listShow">
+          <div class="list-header">
+            <h1 class="title">购物车</h1>
+            <span class="empty" @click="empty">清空</span>
+          </div>
+          <div class="list-content" ref="listContent">
+            <ul>
+              <li class="food" v-for="food in selectFoods">
+                <span class="name">{{food.name}}</span>
+                <div class="price">
+                  <span>¥{{food.price*food.count}}</span>
+                </div>
+                <div class="cartcontral-wrapper">
+                  <cartcontral :food="food"></cartcontral>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
     </div>
-    <transition name="fold">
-      <div class="shopcart-list" v-show="listShow">
-        <div class="list-header">
-          <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
-        </div>
-        <div class="list-content" ref="listContent">
-          <ul>
-            <li class="food" v-for="food in selectFoods">
-              <span class="name">{{food.name}}</span>
-              <div class="price">
-                <span>¥{{food.price*food.count}}</span>
-              </div>
-              <div class="cartcontral-wrapper">
-                <cartcontral :food="food"></cartcontral>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <transition name=fade>
+      <div class="list-mask" @click="hideList()" v-show="listShow"></div>
     </transition>
   </div>
 </template>
@@ -128,6 +133,20 @@
           return;
         }
         this.fold = !this.fold;
+      },
+      empty() {
+        this.selectFoods.forEach((food) => {
+          food.count = 0;
+        });
+      },
+      hideList() {
+        this.fold = true;
+      },
+      pay() {
+        if (this.totalPrice < this.minPrice) {
+          return;
+        }
+        window.alert(`支付${this.totalPrice}元`);
       }
     },
     components: {
@@ -234,7 +253,7 @@
       width: 100%
       transform: translate3D(0, -100%, 0)
       &.fold-enter-active, &.fold-leave-active
-        transition: all .5s linear
+        transition: all .4s linear
       &.fold-enter, &.fold-leave-active
         transform: translate3d(0, 0, 0)
       .list-header
@@ -276,4 +295,19 @@
             position: absolute
             right: 0
             bottom: 6px
+
+  .list-mask
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    overflow: auto
+    backdrop-filter: blur(10px)
+    background: rgba(7, 17, 27, 0.6)
+    &.fade-enter-active, &.fade-leave-active
+      transition: all 0.4s
+    &.fade-enter, &.fade-leave-active
+      opacity: 0
+      background: rgba(7, 17, 27, 0)
 </style>
