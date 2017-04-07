@@ -13,10 +13,10 @@
       </div>
       <div class="foods-wrapper" ref="foodsWrapper">
         <ul>
-          <li v-for="item in goods" class="food-list food-list-hook" @click="selectFood(item, $event)">
+          <li v-for="item in goods" class="food-list food-list-hook">
             <h1 class="title">{{item.name}}</h1>
             <ul>
-              <li v-for="food in item.foods" class="food-item border-1px">
+              <li v-for="food in item.foods" class="food-item border-1px" @click="selectFood(food, $event)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -29,7 +29,7 @@
                   </div>
                   <div class="price">
                     <span class="now">￥{{food.price}}</span>
-                    <span class="old" v-show="food.oldPrice">{{food.oldPrice}}</span>
+                    <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontral-wrapper">
                     <cartcontral :food="food"></cartcontral>
@@ -137,6 +137,7 @@
         }
       },
       selectFood(food, event) {
+          console.log(food);
         if (!event._constructed) {
           return;
         }
