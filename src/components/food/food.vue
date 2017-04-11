@@ -33,7 +33,8 @@
         <split></split>
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect :ratings="food.ratings" :select-type="selectType" :only-content="onlyContent" :desc="desc"></ratingselect>
+          <ratingselect @select="selectRating" @toggle="toggleContent" :ratings="food.ratings" :select-type="selectType" :only-content="onlyContent"
+                        :desc="desc"></ratingselect>
         </div>
       </div>
     </div>
@@ -61,7 +62,7 @@
       return {
         shopFlag: false,
         selectType: ALL,
-        onlyContent: true,
+        onlyContent: false,
         desc: {
           all: '全部',
           positive: '推荐',
@@ -73,7 +74,7 @@
       show() {
         this.shopFlag = true;
         this.selectType = ALL;
-        this.onlyContent = true;
+        this.onlyContent = false;
         this.$nextTick(() => {
           if (!this.scroll) {
             this.scroll = new BScroll(this.$refs.food, {
@@ -92,6 +93,12 @@
           return;
         }
         Vue.set(this.food, 'count', 1);
+      },
+      selectRating(type) {
+        this.selectType = type;
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
       }
     },
     components: {
@@ -200,4 +207,11 @@
         padding: 0 8px
         font-size: 12px
         color: rgb(77, 85, 93)
+    .rating
+      padding-top: 18px
+      .title
+        line-height: 14px
+        margin-left: 18px
+        font-size: 14px
+        color: rgb(7, 17, 27)
 </style>
